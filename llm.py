@@ -6,34 +6,31 @@ load_dotenv()
 
 API_KEY = os.getenv("OPENAI_API_KEY")
 
-# Define URL for OpenAI chat API
+# OpenAI API endpoint
 url = "https://api.openai.com/v1/chat/completions"
 
-# Define headers once
+# headers
 headers = {
     "Authorization": f"Bearer {API_KEY}",
     "Content-Type": "application/json"
 }
 
 def get_llm_response(message):
-    # Define payload for the API request
     data = {
-        "model": "gpt-3.5-turbo",        # or "gpt-4o-mini" if you have access
+        "model": "gpt-3.5-turbo",
         "messages": [{"role": "user", "content": message}]
     }
 
     try:
         res = requests.post(url, headers=headers, json=data)
         data = res.json()
-
-        # Debug output to see what API returns
         print("DEBUG RESPONSE:", data)
 
-        # Handle API errors gracefully
+        # If API returns an error (like quota exceeded)
         if "error" in data:
             return f"LLM API Error: {data['error']['message']}"
 
-        # Return the assistant reply
+        # normal response
         return data["choices"][0]["message"]["content"]
 
     except Exception as e:

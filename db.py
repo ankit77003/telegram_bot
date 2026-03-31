@@ -1,6 +1,6 @@
+import os
 from supabase import create_client
 from dotenv import load_dotenv
-import os
 
 load_dotenv()
 
@@ -15,6 +15,10 @@ def store_message(user_id, user_message, bot_response):
         "user_message": user_message,
         "bot_response": bot_response
     }
-
-    response = supabase.table("messages").insert(data).execute()
-    return response
+    try:
+        response = supabase.table("messages").insert(data).execute()
+        print("DB insert done:", response)
+        return response
+    except Exception as e:
+        print("DB ERROR:", e)
+        return None
