@@ -4,10 +4,10 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-API_KEY = os.getenv("OPENAI_API_KEY")
+API_KEY = os.getenv("OPENROUTER_API_KEY")
 
-# OpenAI API endpoint
-url = "https://api.openai.com/v1/chat/completions"
+# OpenRouter endpoint
+url = "https://openrouter.ai/api/v1/chat/completions"
 
 # headers
 headers = {
@@ -17,7 +17,7 @@ headers = {
 
 def get_llm_response(message):
     data = {
-        "model": "gpt-3.5-turbo",
+        "model": "gpt-3.5-turbo",  # OpenRouter supports same model names
         "messages": [{"role": "user", "content": message}]
     }
 
@@ -26,11 +26,11 @@ def get_llm_response(message):
         data = res.json()
         print("DEBUG RESPONSE:", data)
 
-        # If API returns an error (like quota exceeded)
+        # Handle errors
         if "error" in data:
             return f"LLM API Error: {data['error']['message']}"
 
-        # normal response
+        # OpenRouter response structure is same as OpenAI
         return data["choices"][0]["message"]["content"]
 
     except Exception as e:
